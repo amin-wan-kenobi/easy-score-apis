@@ -26,5 +26,4 @@ app.post('/register', (req, res) => {
 
 app.listen(port, () => console.log(`Server started and listening to Port ${port}`));
 
-
 module.exports = { app };
