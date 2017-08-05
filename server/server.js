@@ -16,11 +16,25 @@ app.use(bodyParser.text());
 app.post('/register', (req, res) => {
     let body = _.pick(req.body, ['username', 'password', 'name', 'surname', 'mobile', 'accountNo']);
     let user = new User(body);
+    user.isActive = true;
+    user.role = "1";
     user.save().then((user) => {
         return user.generateToken();
     }).then((token) => {
-        res.send({user, token});
+        res.send(user);
     }).catch((e) => res.status(400).send(e));
+});
+
+app.post('/api/login', (req, res) => {
+    let {secret_key, username, password } = _.pick(req.body, ['secret_key', 'username', 'password']);
+    User.findByCredentials(username, password).then( (user) => {
+        return user.generateToken().then( (token) => {
+            res.send(user);
+        });
+    }).catch((e) => {
+        res.status(400).send(e);
+    })
+    
 });
 
 
