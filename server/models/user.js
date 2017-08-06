@@ -23,7 +23,8 @@ var UserSchema = new mongoose.Schema({
     password:{
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        minlength: 6
     },
     token: {
         type: String,
@@ -92,6 +93,23 @@ UserSchema.statics.findByCredentials = function (username, password) {
             });
         }
         );
+    });
+};
+
+UserSchema.statics.findByToken = function (token) {
+    var User = this;
+    var decoded;
+
+    try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+        return Promise.reject('Wrong Token');
+    }
+
+    //Success Case
+    return User.findOne({
+        _id: decoded._id,
+        token
     });
 };
 

@@ -33,8 +33,22 @@ app.post('/api/login', (req, res) => {
         });
     }).catch((e) => {
         res.status(400).send(e);
-    })
-    
+    });
+});
+
+app.get('/api/token', (req, res) => {
+    var token = req.header('Authorization').replace('Bearer ','');
+    console.log(token);
+    User.findByToken(token).then((user) => {
+        if(!user){
+            return Promise.reject();
+        }
+        
+        res.send(user);
+    }).catch( (e) => {
+        //401 means authentication invalid
+        res.status(401).send();
+    });
 });
 
 
