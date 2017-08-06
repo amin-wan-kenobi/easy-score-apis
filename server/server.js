@@ -38,7 +38,6 @@ app.post('/api/login', (req, res) => {
 
 app.get('/api/token', (req, res) => {
     var token = req.header('Authorization').replace('Bearer ','');
-    console.log(token);
     User.findByToken(token).then((user) => {
         if(!user){
             return Promise.reject();
